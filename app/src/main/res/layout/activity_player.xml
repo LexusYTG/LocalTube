@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <!-- Overlay completo de controles -->
+    <LinearLayout
+        android:id="@+id/controls_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#99000000"
+        android:visibility="visible">
+
+        <!-- Barra superior: titulo + PiP -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btn_pip"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:shadowColor="#000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="3" />
+
+            <Button
+                android:id="@+id/btn_pip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="PiP"
+                android:textColor="#FFFFFF"
+                android:background="@null"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <!-- Espacio central (empuja controles abajo) -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Botones centrales: prev / -10 / play / +10 / next -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageButton
+                android:id="@+id/btn_prev"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@android:drawable/ic_media_previous"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:padding="8dp" />
+
+            <ImageButton
+                android:id="@+id/btn_seek_back"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@android:drawable/ic_media_rew"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:padding="8dp" />
+
+            <ImageButton
+                android:id="@+id/btn_play"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@android:drawable/ic_media_pause"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:padding="8dp" />
+
+            <ImageButton
+                android:id="@+id/btn_seek_fwd"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@android:drawable/ic_media_ff"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:padding="8dp" />
+
+            <ImageButton
+                android:id="@+id/btn_next"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@android:drawable/ic_media_next"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:padding="8dp" />
+
+        </LinearLayout>
+
+        <!-- Barra inferior: tiempo + seekbar + velocidad + volumen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
+
+            <!-- Tiempo actual / velocidad / tiempo total -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:id="@+id/txt_current"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:text="0:00" />
+
+                <TextView
+                    android:id="@+id/txt_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="#FFD740"
+                    android:textSize="13sp"
+                    android:text="1x"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:id="@+id/txt_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textColor="#BBBBBB"
+                    android:textSize="12sp"
+                    android:text="0:00" />
+
+            </RelativeLayout>
+
+            <!-- Seekbar de progreso -->
+            <SeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Volumen -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/lbl_vol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="Vol"
+                    android:textColor="#BBBBBB"
+                    android:textSize="11sp" />
+
+                <SeekBar
+                    android:id="@+id/volume_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/lbl_vol"
+                    android:layout_marginLeft="8dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Buffering spinner (siempre encima) -->
+    <ProgressBar
+        android:id="@+id/progress_buffering"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>

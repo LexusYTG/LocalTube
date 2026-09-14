@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.Holo">
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="android:actionBarStyle">@style/AppActionBar</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    <style name="AppThemeNoActionBar" parent="@android:style/Theme.Holo.NoActionBar">
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+    <style name="AppActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@color/surface</item>
+        <item name="android:titleTextStyle">@style/AppActionBarTitle</item>
+    </style>
+    <style name="AppActionBarTitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+</resources>

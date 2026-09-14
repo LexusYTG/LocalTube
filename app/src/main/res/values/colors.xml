@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1C1C1E</color>
+    <color name="bg">#000000</color>
+    <color name="surface">#1C1C1E</color>
+    <color name="surface2">#2C2C2E</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#8E8E93</color>
+    <color name="accent">#FF375F</color>
+    <color name="accent2">#30D158</color>
+    <color name="overlay_bg">#AA000000</color>
+    <color name="divider">#38383A</color>
+    <color name="chip_bg">#2C2C2E</color>
+    <color name="chip_border">#48484A</color>
+    <color name="thumb_bg">#2C2C2E</color>
+    <color name="duration_bg">#CC000000</color>
+    <color name="tab_indicator">#FF375F</color>
+</resources>

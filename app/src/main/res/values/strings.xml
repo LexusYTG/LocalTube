@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LocalTube</string>
+    <string name="no_videos">No se encontraron videos</string>
+    <string name="scanning">Escaneando...</string>
+    <string name="error_permission">Permiso de lectura denegado</string>
+    <string name="settings">Ajustes</string>
+    <string name="search">Buscar</string>
+    <string name="error_open">No se pudo abrir el video</string>
+    <string name="error_playback">Error de reproduccion</string>
+</resources>
