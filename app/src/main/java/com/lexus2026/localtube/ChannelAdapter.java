@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.content.*;
@@ -10,45 +27,34 @@ import android.widget.*;
 import java.lang.ref.*;
 import java.util.*;
 
-/**
- * Adapter para ChannelActivity.
- *
- * Maneja dos tipos de fila:
- *   TYPE_VIDEO  → video suelto (igual que VideoAdapter.Holder)
- *   TYPE_SERIES → tarjeta de serie: miniatura del cap. 1 + nombre + badge con cantidad
- *
- * Listener diferenciado:
- *   onVideoClick(item)   → video suelto, abrir PlayerActivity
- *   onSeriesClick(name)  → serie, desplegar lista de capítulos en ChannelActivity
- */
 public class ChannelAdapter extends BaseAdapter {
 
-    // ─── Tipos de fila ───────────────────────────────────────────────────────
+    
     private static final int VIEW_TYPE_VIDEO  = 0;
     private static final int VIEW_TYPE_SERIES = 1;
 
-    // ─── Paleta ──────────────────────────────────────────────────────────────
+    
     private static final int COLOR_BG      = 0xFF0A0A0A;
     private static final int COLOR_CARD    = 0xFF141414;
     private static final int COLOR_THUMB   = 0xFF232323;
     private static final int COLOR_TEXT    = 0xFFFFFFFF;
     private static final int COLOR_TEXT2   = 0xFFA0A0A0;
     private static final int COLOR_PRIMARY = 0xFFFF004D;
-    private static final int COLOR_BADGE   = 0xE6000000;  // badge duración / episodios
+    private static final int COLOR_BADGE   = 0xE6000000;  
 
-    // ─── Modelo de fila ──────────────────────────────────────────────────────
+    
 
-    /** Elemento que puede representar un video suelto O una serie completa. */
+    
     public static class RowItem {
         static final int KIND_VIDEO  = 0;
         static final int KIND_SERIES = 1;
 
         final int     kind;
-        final VideoItem  video;      // KIND_VIDEO: el video; KIND_SERIES: primer capítulo (portada)
-        final String  seriesName;    // KIND_SERIES
-        final int     episodeCount;  // KIND_SERIES
+        final VideoItem  video;      
+        final String  seriesName;    
+        final int     episodeCount;  
 
-        /** Constructor para video suelto. */
+        
         RowItem(VideoItem video) {
             this.kind         = KIND_VIDEO;
             this.video        = video;
@@ -56,25 +62,25 @@ public class ChannelAdapter extends BaseAdapter {
             this.episodeCount = 0;
         }
 
-        /** Constructor para tarjeta de serie. */
+        
         RowItem(String seriesName, VideoItem firstEpisode, int episodeCount) {
             this.kind         = KIND_SERIES;
-            this.video        = firstEpisode;  // puede ser null si la serie está vacía
+            this.video        = firstEpisode;  
             this.seriesName   = seriesName;
             this.episodeCount = episodeCount;
         }
     }
 
-    // ─── Listeners ───────────────────────────────────────────────────────────
+    
 
     public interface OnItemClickListener {
         void onVideoClick(VideoItem item);
         void onSeriesClick(String seriesName);
-        /** Mantener presionado un video suelto (no serie): ofrecer renombrar / tags. */
+        
         void onVideoLongClick(VideoItem item);
     }
 
-    // ─── Estado ──────────────────────────────────────────────────────────────
+    
 
     private final Context          context;
     private final List<RowItem>    rows    = new ArrayList<RowItem>();
@@ -86,21 +92,14 @@ public class ChannelAdapter extends BaseAdapter {
 
     public void setListener(OnItemClickListener l) { this.listener = l; }
 
-    /**
-     * Carga el contenido del canal:
-     *   - Videos sueltos como RowItem de tipo VIDEO
-     *   - Cada serie como RowItem de tipo SERIES
-     *
-     * El orden final: primero las series, luego los videos sueltos
-     * (podés invertirlo si preferís).
-     */
+    
     public void setChannelContent(List<VideoItem> looseVideos,
-								  java.util.Collection<SeriesIndex> series) {
+								  java.util.Collection<GlobalIndex.SeriesEntry> series) {
         rows.clear();
 
-        // Series primero
+        
         if (series != null) {
-            for (SeriesIndex si : series) {
+            for (GlobalIndex.SeriesEntry si : series) {
                 if (si.getCount() > 0) {
                     rows.add(new RowItem(si.getSeriesName(),
                                          si.getFirstEpisode(),
@@ -109,7 +108,7 @@ public class ChannelAdapter extends BaseAdapter {
             }
         }
 
-        // Luego videos sueltos
+        
         if (looseVideos != null) {
             for (VideoItem v : looseVideos) {
                 rows.add(new RowItem(v));
@@ -119,7 +118,7 @@ public class ChannelAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    // ─── BaseAdapter ─────────────────────────────────────────────────────────
+    
 
     @Override public int getCount()                  { return rows.size(); }
     @Override public Object getItem(int pos)         { return rows.get(pos); }
@@ -142,7 +141,7 @@ public class ChannelAdapter extends BaseAdapter {
         }
     }
 
-    // ─── Vista: Video suelto ─────────────────────────────────────────────────
+    
 
     private View getVideoView(final int pos, View convertView,
 							  ViewGroup parent, final RowItem row) {
@@ -169,7 +168,7 @@ public class ChannelAdapter extends BaseAdapter {
         return convertView;
     }
 
-    // ─── Vista: Tarjeta de Serie ──────────────────────────────────────────────
+    
 
     private View getSeriesView(final int pos, View convertView,
 							   ViewGroup parent, final RowItem row) {
@@ -190,9 +189,9 @@ public class ChannelAdapter extends BaseAdapter {
         return convertView;
     }
 
-    // =========================================================================
-    // VideoHolder — igual al Holder de VideoAdapter
-    // =========================================================================
+    
+    
+    
 
     private static class VideoHolder {
         final Context      ctx;
@@ -205,7 +204,7 @@ public class ChannelAdapter extends BaseAdapter {
 
         VideoHolder(Context ctx) {
             this.ctx = ctx;
-            int D = 0; // alias de dp usado abajo
+            int D = 0; 
 
             wrapper = new LinearLayout(ctx);
             wrapper.setOrientation(LinearLayout.VERTICAL);
@@ -222,7 +221,7 @@ public class ChannelAdapter extends BaseAdapter {
             wrapper.addView(row, new LinearLayout.LayoutParams(
 								ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            // Thumbnail
+            
             FrameLayout thumbBox = new FrameLayout(ctx);
             int tw = dp(ctx,152), th = dp(ctx,86);
             row.addView(thumbBox, new LinearLayout.LayoutParams(tw, th));
@@ -260,7 +259,7 @@ public class ChannelAdapter extends BaseAdapter {
             dLp.setMargins(0, 0, dp(ctx,7), dp(ctx,7));
             thumbBox.addView(duration, dLp);
 
-            // Columna de texto
+            
             LinearLayout textCol = new LinearLayout(ctx);
             textCol.setOrientation(LinearLayout.VERTICAL);
             textCol.setGravity(Gravity.CENTER_VERTICAL);
@@ -317,16 +316,16 @@ public class ChannelAdapter extends BaseAdapter {
         }
     }
 
-    // =========================================================================
-    // SeriesHolder — tarjeta con badge de episodios
-    // =========================================================================
+    
+    
+    
 
     private static class SeriesHolder {
         final Context      ctx;
         final LinearLayout wrapper;
         final ImageView    thumb;
         final TextView     seriesTitle;
-        final TextView     episodeBadge; // recuadro negro con "N cap."
+        final TextView     episodeBadge; 
 
         SeriesHolder(Context ctx) {
             this.ctx = ctx;
@@ -346,7 +345,7 @@ public class ChannelAdapter extends BaseAdapter {
             wrapper.addView(row, new LinearLayout.LayoutParams(
 								ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            // ── Thumbnail con badge de cantidad ──
+            
             FrameLayout thumbBox = new FrameLayout(ctx);
             int tw = dp(ctx,152), th = dp(ctx,86);
             row.addView(thumbBox, new LinearLayout.LayoutParams(tw, th));
@@ -361,7 +360,7 @@ public class ChannelAdapter extends BaseAdapter {
             thumbBox.addView(thumb, new FrameLayout.LayoutParams(
 								 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-            // Badge negro con cantidad de episodios (esquina inferior derecha)
+            
             episodeBadge = new TextView(ctx);
             episodeBadge.setTextColor(COLOR_TEXT);
             episodeBadge.setTextSize(10);
@@ -377,7 +376,7 @@ public class ChannelAdapter extends BaseAdapter {
             eLp.setMargins(0, 0, dp(ctx,7), dp(ctx,7));
             thumbBox.addView(episodeBadge, eLp);
 
-            // ── Columna de texto ──
+            
             LinearLayout textCol = new LinearLayout(ctx);
             textCol.setOrientation(LinearLayout.VERTICAL);
             textCol.setGravity(Gravity.CENTER_VERTICAL);
@@ -386,7 +385,7 @@ public class ChannelAdapter extends BaseAdapter {
             tcLp.leftMargin = dp(ctx,12);
             row.addView(textCol, tcLp);
 
-            // Ícono de serie (pequeño label "SERIE")
+            
             TextView seriesLabel = new TextView(ctx);
             seriesLabel.setText("SERIE");
             seriesLabel.setTextColor(COLOR_PRIMARY);
@@ -394,7 +393,7 @@ public class ChannelAdapter extends BaseAdapter {
             seriesLabel.setTypeface(null, Typeface.BOLD);
             seriesLabel.setPadding(dp(ctx,6), dp(ctx,2), dp(ctx,6), dp(ctx,2));
             GradientDrawable slBg = new GradientDrawable();
-            slBg.setColor(0x22FF004D);  // rojo translúcido
+            slBg.setColor(0x22FF004D);  
             slBg.setCornerRadius(dp(ctx,6));
             seriesLabel.setBackground(slBg);
             textCol.addView(seriesLabel);
@@ -425,9 +424,9 @@ public class ChannelAdapter extends BaseAdapter {
         }
     }
 
-    // =========================================================================
-    // Utilidades compartidas
-    // =========================================================================
+    
+    
+    
 
     static class ThumbLoader extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> ref;
@@ -450,4 +449,3 @@ public class ChannelAdapter extends BaseAdapter {
         return (int) (v * ctx.getResources().getDisplayMetrics().density + 0.5f);
     }
 }
-

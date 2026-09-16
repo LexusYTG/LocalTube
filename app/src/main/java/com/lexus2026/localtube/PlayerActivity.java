@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.app.*;
@@ -45,7 +62,7 @@ PlaybackGuard.Session {
     private boolean prepareRequested = false;
     private long playStartTime = 0;
 
-    /** Surface activa del GLSurfaceView, guardada para reutilizarla al cambiar de video. */
+    
     private Surface currentSurface;
 
     private int lastKnownPositionMs = 0;
@@ -103,7 +120,7 @@ PlaybackGuard.Session {
 
     private GestureDetector gestureDetector;
 
-    // ── PiP receiver ─────────────────────────────────────────────────────────
+    
     private boolean pipReceiverRegistered = false;
 
     private final BroadcastReceiver pipReceiver = new BroadcastReceiver() {
@@ -163,15 +180,15 @@ PlaybackGuard.Session {
 
     private void registerPipReceiver() {
         IntentFilter filter = new IntentFilter();
-        // Acciones PiP (solo API 26+, pero el receiver también maneja notificación)
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             filter.addAction(PipActions.ACTION_TOGGLE);
             filter.addAction(PipActions.ACTION_REWIND);
             filter.addAction(PipActions.ACTION_FORWARD);
-            filter.addAction(PipActions.ACTION_PREV);   // NUEVO
-            filter.addAction(PipActions.ACTION_NEXT);   // NUEVO
+            filter.addAction(PipActions.ACTION_PREV);   
+            filter.addAction(PipActions.ACTION_NEXT);   
         }
-        // Acciones de la notificación de segundo plano (todas las versiones)
+        
         filter.addAction(MediaPlaybackService.ACTION_NOTIF_TOGGLE);
         filter.addAction(MediaPlaybackService.ACTION_NOTIF_PREV);
         filter.addAction(MediaPlaybackService.ACTION_NOTIF_NEXT);
@@ -189,7 +206,7 @@ PlaybackGuard.Session {
         pipReceiverRegistered = false;
     }
 
-    // ── UI ───────────────────────────────────────────────────────────────────
+    
 
     private void buildUi() {
         root = new FrameLayout(this);
@@ -453,7 +470,7 @@ PlaybackGuard.Session {
 			});
     }
 
-    // ── Reproductor ──────────────────────────────────────────────────────────
+    
 
     private void initPlayer() {
         mediaPlayer = new MediaPlayer();
@@ -508,7 +525,7 @@ PlaybackGuard.Session {
         controlsOverlay.setOnTouchListener(touchRouter);
     }
 
-    // ── Navegación entre videos ─────────────────────────────────────────────
+    
 
     private List<VideoItem> buildPlaylist() {
         List<VideoItem> all = index.getAll();
@@ -630,7 +647,7 @@ PlaybackGuard.Session {
         }
     }
 
-    // ── Ciclo de vida ────────────────────────────────────────────────────────
+    
 
     @Override
     protected void onPause() {
@@ -734,7 +751,7 @@ PlaybackGuard.Session {
         unregisterPipReceiver();
     }
 
-    // ── PlaybackGuard.Session ────────────────────────────────────────────────
+    
 
     @Override
     public void stopPlayback() {
@@ -825,7 +842,7 @@ PlaybackGuard.Session {
         }
     }
 
-    // ── MediaPlayer callbacks ────────────────────────────────────────────────
+    
 
     @Override
     public void onPrepared(MediaPlayer mp) {
@@ -893,7 +910,7 @@ PlaybackGuard.Session {
         return true;
     }
 
-    // ── Acciones ─────────────────────────────────────────────────────────────
+    
 
     private void togglePlay() {
         if (!isPrepared) return;
@@ -962,7 +979,7 @@ PlaybackGuard.Session {
         scheduleHide();
     }
 
-    // ── PiP ──────────────────────────────────────────────────────────────────
+    
 
     private void minimize() {
         if (mediaPlayer != null) {
@@ -992,10 +1009,7 @@ PlaybackGuard.Session {
         } catch (Exception ignored) {}
     }
 
-    /**
-     * Construye los params del PiP incluyendo las 3 RemoteAction estándar
-     * de Android: [Video anterior] [Play/Pausa] [Siguiente video].
-     */
+    
     private PictureInPictureParams buildPipParams() {
         int w = currentVideo.width  > 0 ? currentVideo.width  : 16;
         int h = currentVideo.height > 0 ? currentVideo.height : 9;

@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.app.*;
@@ -186,7 +203,7 @@ public class SettingsActivity extends Activity {
                 }
             });
 
-        // Pista sobre el long-press
+        
         TextView hint = new TextView(this);
         hint.setText(Lang.get("scan_reindex_desc"));
         hint.setTextColor(COLOR_TEXT2);
@@ -197,7 +214,7 @@ public class SettingsActivity extends Activity {
         return card;
     }
 
-    /** Escaneo incremental clásico (busca archivos nuevos). */
+    
     private void startIncrementalScan(final AppPrefs prefs) {
         Toast.makeText(SettingsActivity.this, Lang.get("scan_running"), Toast.LENGTH_SHORT).show();
         GlobalIndex idx = new GlobalIndex(SettingsActivity.this);
@@ -218,7 +235,7 @@ public class SettingsActivity extends Activity {
             });
     }
 
-    /** Diálogo de confirmación para el reindexado completo. */
+    
     private void confirmFullReindex(final AppPrefs prefs) {
         new AlertDialog.Builder(this)
             .setTitle(Lang.get("scan_reindex_title"))
@@ -232,10 +249,7 @@ public class SettingsActivity extends Activity {
             .show();
     }
 
-    /**
-     * Borra índices + miniaturas (excepto carátulas) en un hilo de fondo y,
-     * al terminar, lanza un escaneo completo desde cero.
-     */
+    
     private void performFullReindex(final AppPrefs prefs) {
         final String root = prefs.getRootPath();
         if (root == null) {
@@ -250,7 +264,7 @@ public class SettingsActivity extends Activity {
 
         new Thread(new Runnable() {
 				@Override public void run() {
-					// Borrado en disco (puede tardar si hay muchas miniaturas)
+					
 					idx.wipeAllIndexData();
 
 					runOnUiThread(new Runnable() {
@@ -258,7 +272,7 @@ public class SettingsActivity extends Activity {
 								Toast.makeText(SettingsActivity.this,
 											   Lang.get("scan_running"), Toast.LENGTH_SHORT).show();
 
-								// Refrescar el estado en memoria (channels ya está vacío)
+								
 								idx.loadFromDisk();
 
 								idx.scanAsync(new GlobalIndex.ScanCallback() {
@@ -324,16 +338,16 @@ public class SettingsActivity extends Activity {
         GlobalIndex idx = loadChannelsIndex(prefs);
         if (idx == null) return;
 
-        final Collection<ChannelIndex> channels = idx.getChannels();
+        final Collection<GlobalIndex.ChannelEntry> channels = idx.getChannels();
         if (channels.isEmpty()) {
             Toast.makeText(this, Lang.get("channels_empty"), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        final List<ChannelIndex> list = new ArrayList<ChannelIndex>(channels);
+        final List<GlobalIndex.ChannelEntry> list = new ArrayList<GlobalIndex.ChannelEntry>(channels);
         String[] labels = new String[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            ChannelIndex ci = list.get(i);
+            GlobalIndex.ChannelEntry ci = list.get(i);
             ChannelData cd = ci.getChannelData();
             String name = cd != null && cd.displayName != null && !cd.displayName.isEmpty()
                 ? cd.displayName : ci.getFolderId();
@@ -351,7 +365,7 @@ public class SettingsActivity extends Activity {
             .show();
     }
 
-    private void showChannelOptionsDialog(final ChannelIndex ci) {
+    private void showChannelOptionsDialog(final GlobalIndex.ChannelEntry ci) {
         ChannelData cd = ci.getChannelData();
         String name = cd != null && cd.displayName != null ? cd.displayName : ci.getFolderId();
 
@@ -368,7 +382,7 @@ public class SettingsActivity extends Activity {
             .show();
     }
 
-    private void showRenameDialog(final ChannelIndex ci) {
+    private void showRenameDialog(final GlobalIndex.ChannelEntry ci) {
         ChannelData cd = ci.getChannelData();
         final EditText input = new EditText(this);
         input.setTextColor(COLOR_TEXT);
@@ -392,7 +406,7 @@ public class SettingsActivity extends Activity {
             .show();
     }
 
-    private void pickChannelPhoto(ChannelIndex ci) {
+    private void pickChannelPhoto(GlobalIndex.ChannelEntry ci) {
         pendingChannelFolderId = ci.getFolderId();
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -403,7 +417,7 @@ public class SettingsActivity extends Activity {
 
     private void applyChannelPhoto(Uri imageUri) {
         if (pendingChannelFolderId == null || channelsIndex == null) return;
-        ChannelIndex ci = channelsIndex.getChannel(pendingChannelFolderId);
+        GlobalIndex.ChannelEntry ci = channelsIndex.getChannel(pendingChannelFolderId);
         if (ci == null) return;
 
         try {

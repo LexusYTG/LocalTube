@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.app.*;
@@ -11,27 +28,6 @@ import android.widget.*;
 import java.lang.ref.*;
 import java.util.*;
 
-/**
- * Muestra el contenido de un canal con tres secciones seleccionables:
- *
- *   ┌───────────────────────────────┐
- *   │  [avatar]  Nombre del canal    │
- *   │            N elementos         │
- *   ├───────────────────────────────┤
- *   │  Videos   Shorts   Series      │  ← barra de selección
- *   ├───────────────────────────────┤
- *   │  (contenido según pestaña)     │
- *   └───────────────────────────────┘
- *
- * Pestañas:
- *   Videos  → videos sueltos (TYPE_VIDEO)
- *   Shorts  → videos de la carpeta shorts/ (TYPE_SHORT)
- *   Series  → tarjetas de serie (una por subcarpeta, salvo shorts/)
- *
- * Al tocar una serie se entra en "modo serie": la barra de pestañas
- * desaparece y se muestra la lista de capítulos de esa serie. El botón
- * Atrás (o Back) vuelve a la vista de canal en la pestaña Series.
- */
 public class ChannelActivity extends Activity {
 
     public static final String EXTRA_CHANNEL_ID = "extra_channel_id";
@@ -48,17 +44,17 @@ public class ChannelActivity extends Activity {
     private static final int COLOR_PRIMARY = 0xFFFF004D;
     private static final int COLOR_BORDER  = 0xFF262626;
 
-    // ─── Estado ──────────────────────────────────────────────────────────────
+    
     private GlobalIndex index;
-    private ChannelIndex channelIndex;
+    private GlobalIndex.ChannelEntry channelIndex;
     private String channelId;
     private String channelDisplayName;
 
-    /** null = modo canal;  no-null = modo serie expandida */
+    
     private String expandedSeriesName = null;
     private int currentTab = TAB_VIDEOS;
 
-    // ─── Vistas ──────────────────────────────────────────────────────────────
+    
     private ImageView  avatar;
     private TextView   nameLabel;
     private TextView   countLabel;
@@ -70,11 +66,11 @@ public class ChannelActivity extends Activity {
     private TextView    tabVideosLbl, tabShortsLbl, tabSeriesLbl;
     private View        tabVideosInd, tabShortsInd, tabSeriesInd;
 
-    // ─── Adapters ─────────────────────────────────────────────────────────────
+    
     private ChannelAdapter channelAdapter;
     private EpisodeAdapter episodeAdapter;
 
-    // ─── Ciclo de vida ────────────────────────────────────────────────────────
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +104,7 @@ public class ChannelActivity extends Activity {
         }
     }
 
-    // ─── Modos ───────────────────────────────────────────────────────────────
+    
 
     private void initChannelMode() {
         expandedSeriesName = null;
@@ -135,19 +131,19 @@ public class ChannelActivity extends Activity {
         updateTabStyles();
     }
 
-    /** Carga en el adapter el contenido de la pestaña activa. */
+    
     private void refreshTabContent() {
         if (channelAdapter == null) return;
 
         List<VideoItem> videos = new ArrayList<VideoItem>();
-        Collection<SeriesIndex> series = new ArrayList<SeriesIndex>();
+        Collection<GlobalIndex.SeriesEntry> series = new ArrayList<GlobalIndex.SeriesEntry>();
 
         if (channelIndex != null) {
             if (currentTab == TAB_VIDEOS) {
                 videos = channelIndex.getVideos();
             } else if (currentTab == TAB_SHORTS) {
                 videos = channelIndex.getShorts();
-            } else { // TAB_SERIES
+            } else { 
                 series = channelIndex.getAllSeries();
             }
         }
@@ -190,7 +186,7 @@ public class ChannelActivity extends Activity {
         initChannelMode();
     }
 
-    // ─── Navegación ──────────────────────────────────────────────────────────
+    
 
     private void openPlayer(VideoItem item) {
         Class<?> target = item.type == VideoItem.TYPE_SERIES
@@ -202,7 +198,7 @@ public class ChannelActivity extends Activity {
         startActivity(i);
     }
 
-    // ─── Edición manual (mantener presionado) ──────────────────────────────────
+    
 
     private void showVideoOptionsMenu(final VideoItem item, boolean isSeriesEpisode) {
         if (item == null) return;
@@ -311,7 +307,7 @@ public class ChannelActivity extends Activity {
         }
     }
 
-    // ─── Helpers ─────────────────────────────────────────────────────────────
+    
 
     private int countChannelItems() {
         if (channelIndex == null) return 0;
@@ -341,7 +337,7 @@ public class ChannelActivity extends Activity {
         countLabel.setText(n + suffix);
     }
 
-    // ─── Construcción de UI ──────────────────────────────────────────────────
+    
 
     private void buildUi(String displayName, String photoPath, int count) {
         LinearLayout root = new LinearLayout(this);
@@ -432,7 +428,7 @@ public class ChannelActivity extends Activity {
         return header;
     }
 
-    // ─── Barra de pestañas ───────────────────────────────────────────────────
+    
 
     private View buildTabBar() {
         LinearLayout wrapper = new LinearLayout(this);
@@ -514,7 +510,7 @@ public class ChannelActivity extends Activity {
         indicator.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
     }
 
-    // ─── AvatarLoader ────────────────────────────────────────────────────────
+    
 
     private static class AvatarLoader extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> ref;
@@ -556,9 +552,9 @@ public class ChannelActivity extends Activity {
         return (int) (v * getResources().getDisplayMetrics().density + 0.5f);
     }
 
-    // =========================================================================
-    // EpisodeAdapter — lista de capítulos dentro de una serie
-    // =========================================================================
+    
+    
+    
 
     private static class EpisodeAdapter extends BaseAdapter {
 

@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.content.*;
@@ -30,7 +47,7 @@ public class HomeFragment {
     private static final int COLOR_PRIMARY= 0xFFFF004D;
 
     private final MainActivity activity;
-    private final VideoIndex index;
+    private final GlobalIndex index;
     private final RecommendationEngine engine;
     private final ListView listView;
     private final HomeAdapter adapter;
@@ -40,7 +57,7 @@ public class HomeFragment {
     private int shortsOffset = 0;
     private boolean loadingMore = false;
 
-    public HomeFragment(MainActivity activity, VideoIndex index, RecommendationEngine engine) {
+    public HomeFragment(MainActivity activity, GlobalIndex index, RecommendationEngine engine) {
         this.activity = activity;
         this.index    = index;
         this.engine   = engine;
@@ -200,7 +217,7 @@ public class HomeFragment {
         }
     }
 
-    // ── ViewHolder ───────────────────────────────────────────────────────────
+    
 
     private class RowHolder {
         final LinearLayout wrapper;
@@ -293,7 +310,7 @@ public class HomeFragment {
             channelName.setEllipsize(TextUtils.TruncateAt.END);
             channelName.setPadding(0, dp(3), 0, 0);
             channelName.setVisibility(View.GONE);
-            // Necesario para que el toque no se lo coma el OnClickListener de la fila.
+            
             channelName.setFocusable(true);
             channelName.setClickable(true);
             textCol.addView(channelName);
@@ -327,7 +344,7 @@ public class HomeFragment {
         void bindSeries(VideoItem item) {
             String sn = item.seriesName != null ? item.seriesName : item.title;
             title.setText(sn);
-            // FIX: la serie también muestra el canal al que pertenece.
+            
             bindChannel(item);
             String ep = item.episode >= 0 ? Lang.get("chapter_prefix") + item.episode : Lang.get("chapter_none");
             meta.setText(ep + "  \u00B7  " + item.getDurationFormatted());
@@ -350,11 +367,7 @@ public class HomeFragment {
             loadThumb(item);
         }
 
-        /**
-         * Muestra el nombre del canal (item.category) y le engancha el click
-         * que abre ChannelActivity con el folderId correcto (item.channelId).
-         * Funciona tanto para videos sueltos como para episodios de serie.
-         */
+        
         private void bindChannel(final VideoItem item) {
             if (item.category == null || item.category.isEmpty()
                 || item.channelId == null || item.channelId.isEmpty()) {
@@ -393,7 +406,7 @@ public class HomeFragment {
         }
     }
 
-    // ── Fila de Shorts ───────────────────────────────────────────────────────
+    
 
     private View buildShortsRow(final ShortsRow shortsRow) {
         LinearLayout wrapper = new LinearLayout(activity);
@@ -489,7 +502,7 @@ public class HomeFragment {
         return wrapper;
     }
 
-    // ── Utilidades ───────────────────────────────────────────────────────────
+    
 
     private int dp(int v) {
         return (int) (v * activity.getResources().getDisplayMetrics().density + 0.5f);

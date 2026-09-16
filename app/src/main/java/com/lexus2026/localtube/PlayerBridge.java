@@ -1,17 +1,25 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.app.*;
 import java.lang.ref.*;
 
-/**
- * Holds a weak reference to whichever full-screen player Activity
- * (PlayerActivity or SeriesPlayerActivity) is currently alive - including
- * while it's minimized and sitting in the back stack behind MainActivity.
- * This lets the mini-player bar close it (stopPlayback + finish) without
- * having to bring it to the foreground first.
- *
- * NOTE: reconstructed for this session - see PlaybackGuard.java for context.
- */
 public class PlayerBridge {
 
     private static WeakReference<Activity> current;
@@ -30,13 +38,7 @@ public class PlayerBridge {
         return current != null ? current.get() : null;
     }
 
-    /**
-     * Cierra por completo cualquier reproductor de pantalla completa
-     * (PlayerActivity o SeriesPlayerActivity) que siga vivo - ya sea
-     * minimizado en la barra inferior de MainActivity o en modo PiP del
-     * sistema - para que un reproductor nuevo pueda quedar como el unico
-     * activo. Debe llamarse ANTES de registrar el reproductor nuevo.
-     */
+    
     public static void closeCurrent() {
         Activity activity = getCurrent();
         if (activity == null) return;

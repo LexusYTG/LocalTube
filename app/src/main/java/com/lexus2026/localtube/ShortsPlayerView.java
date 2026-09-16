@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.content.*;
@@ -13,7 +30,7 @@ public class ShortsPlayerView extends FrameLayout
         MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener,
         PlaybackGuard.Session {
 
-    private final VideoIndex index;
+    private final GlobalIndex index;
     private List<VideoItem> shorts = new ArrayList<VideoItem>();
     private int currentIndex = 0;
 
@@ -39,7 +56,7 @@ public class ShortsPlayerView extends FrameLayout
         }
     };
 
-    public ShortsPlayerView(Context ctx, VideoIndex index) {
+    public ShortsPlayerView(Context ctx, GlobalIndex index) {
         super(ctx);
         this.index = index;
         setBackgroundColor(Color.BLACK);
@@ -64,14 +81,14 @@ public class ShortsPlayerView extends FrameLayout
         addView(txtTitle, titleLp);
 
         seekBar = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleHorizontal);
-        seekBar.setBackgroundColor(0x40FFFFFF); // faint track so the line is visible even at 0%
+        seekBar.setBackgroundColor(0x40FFFFFF); 
         FrameLayout.LayoutParams seekLp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(3));
         seekLp.gravity = Gravity.BOTTOM;
         addView(seekBar, seekLp);
 
-        // Big centered play icon shown whenever playback is paused, so pausing
-        // via tap has a clear, visible confirmation (not just silent).
+        
+        
         pauseIcon = new ImageView(getContext());
         pauseIcon.setImageResource(android.R.drawable.ic_media_play);
         pauseIcon.setColorFilter(Color.WHITE);
@@ -112,12 +129,12 @@ public class ShortsPlayerView extends FrameLayout
         setOnTouchListener(new View.OnTouchListener() {
             @Override public boolean onTouch(View v, MotionEvent e) {
                 gestureDetector.onTouchEvent(e);
-                // Must return true (not just forward the detector's result):
-                // GestureDetector.onDown() returns false by default, so if we
-                // returned that raw value here, ACTION_DOWN would be reported
-                // as "unhandled" and Android would never deliver the follow-up
-                // ACTION_MOVE/ACTION_UP for that gesture to this view - which
-                // is exactly why taps and swipes weren't registering at all.
+                
+                
+                
+                
+                
+                
                 return true;
             }
         });
@@ -130,9 +147,9 @@ public class ShortsPlayerView extends FrameLayout
     public void setData(List<VideoItem> list, int startIndex) {
         shorts = list != null ? list : new ArrayList<VideoItem>();
         currentIndex = shorts.isEmpty() ? 0 : Math.max(0, Math.min(startIndex, shorts.size() - 1));
-        // If the surface isn't ready yet (e.g. this view was just created/attached
-        // right after switching to the Shorts tab), don't touch the MediaPlayer now.
-        // surfaceCreated() will load the current index once the surface is valid.
+        
+        
+        
         if (surfaceReady) {
             loadCurrent();
         }
@@ -141,9 +158,9 @@ public class ShortsPlayerView extends FrameLayout
     public void jumpTo(int idx) {
         if (shorts.isEmpty()) return;
         currentIndex = Math.max(0, Math.min(idx, shorts.size() - 1));
-        // Same race as setData(): jumpTo() can be called before surfaceCreated()
-        // has fired. currentIndex is already updated above, so surfaceCreated()
-        // will pick it up and load it as soon as the surface becomes valid.
+        
+        
+        
         if (surfaceReady) {
             loadCurrent();
         }
@@ -183,14 +200,14 @@ public class ShortsPlayerView extends FrameLayout
 
         try {
             mediaPlayer.setDataSource(item.path);
-            // Only attach the Surface and prepare if it's actually valid right
-            // now. loadCurrent() is called from several places (swipe, resume,
-            // tab switch, surfaceCreated itself) and the SurfaceView's Surface
-            // may not exist yet the first time this view is attached to the
-            // window - calling setDisplay() on a not-yet-created/released
-            // Surface throws IllegalArgumentException. When that's the case we
-            // just leave the source set; surfaceCreated() calls loadCurrent()
-            // again once the surface is valid, finishing the job then.
+            
+            
+            
+            
+            
+            
+            
+            
             if (surfaceReady && surfaceView.getHolder().getSurface() != null
                     && surfaceView.getHolder().getSurface().isValid()) {
                 mediaPlayer.setDisplay(surfaceView.getHolder());
@@ -263,9 +280,9 @@ public class ShortsPlayerView extends FrameLayout
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         surfaceReady = true;
-        // currentIndex may have been changed by setData()/jumpTo() while the
-        // surface wasn't ready yet; load whatever is current now, not just when
-        // mediaPlayer is null, so a pending jumpTo() isn't lost.
+        
+        
+        
         if (!shorts.isEmpty()) loadCurrent();
     }
 

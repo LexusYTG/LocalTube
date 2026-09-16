@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import java.util.*;
@@ -15,10 +32,10 @@ public class Lang {
     }
 
     private static final Map<String, String[]> T = new HashMap<>();
-    // Index: 0=es, 1=en, 2=ru, 3=de, 4=zh
+    
 
     static {
-        // ── SettingsActivity ──────────────────────────────────────────────
+        
         T.put("settings_title",          new String[]{"Configuracion",           "Settings",                    "Настройки",                  "Einstellungen",              "设置"});
         T.put("section_library",         new String[]{"Biblioteca",              "Library",                     "Библиотека",                 "Bibliothek",                 "媒体库"});
         T.put("section_playback",        new String[]{"Reproduccion",            "Playback",                    "Воспроизведение",            "Wiedergabe",                 "播放"});
@@ -35,7 +52,7 @@ public class Lang {
         T.put("scan_error",              new String[]{"Error: ",                 "Error: ",                     "Ошибка: ",                   "Fehler: ",                   "错误: "});
         T.put("scan_no_root",            new String[]{"Primero elige la carpeta raiz", "Choose the root folder first", "Сначала выберите корневую папку", "Wählen Sie zuerst den Stammordner", "请先选择根目录"});
 
-        // ── Reindexado completo (long-press en Escanear) ──────────────────
+        
         T.put("scan_reindex_desc",       new String[]{"Manten presionado \"Escanear ahora\" para recrear el indice completo", "Long-press \"Scan now\" to rebuild the full index", "Долгое нажатие на \"Сканировать\" для пересоздания индекса", "\"Jetzt scannen\" lange drücken, um den Index neu aufzubauen", "长按\"立即扫描\"以重建完整索引"});
         T.put("scan_reindex_title",      new String[]{"Recrear indice completo", "Rebuild full index",          "Пересоздать полный индекс",  "Vollstandigen Index neu aufbauen", "重建完整索引"});
         T.put("scan_reindex_confirm",    new String[]{"Se borraran todos los archivos de indice y las miniaturas generadas (excepto las caratulas de canal). Luego se reescaneara todo desde cero.\n\n¿Continuar?", "All index files and generated thumbnails will be deleted (except channel covers). Then everything will be rescanned from scratch.\n\nContinue?", "Все файлы индексов и созданные миниатюры будут удалены (кроме обложек каналов). Затем всё будет пересканировано с нуля.\n\nПродолжить?", "Alle Indexdateien und generierten Miniaturen (außer Kanalbildern) werden gelöscht. Anschließend wird alles neu gescannt.\n\nFortfahren?", "将删除所有索引文件和已生成的缩略图（频道封面除外），然后从头重新扫描全部内容。\n\n是否继续？"});
@@ -66,7 +83,7 @@ public class Lang {
         T.put("lang_btn",                new String[]{"Cambiar idioma",          "Change language",             "Сменить язык",               "Sprache ändern",             "更改语言"});
         T.put("rename_error",            new String[]{"No se pudo renombrar (¿ya existe ese nombre?)", "Could not rename (does that name already exist?)", "Не удалось переименовать (такое имя уже есть?)", "Umbenennen fehlgeschlagen (Name bereits vorhanden?)", "重命名失败（名称是否已存在？）"});
 
-        // ── MainActivity / navegación ─────────────────────────────────────
+        
         T.put("app_name",                new String[]{"LocalTube",               "LocalTube",                   "LocalTube",                  "LocalTube",                  "LocalTube"});
         T.put("rename",                  new String[]{"Renombrar",               "Rename",                      "Переименовать",              "Umbenennen",                 "重命名"});
         T.put("tab_home",               new String[]{"Inicio",                   "Home",                        "Главная",                    "Startseite",                 "主页"});
@@ -81,7 +98,7 @@ public class Lang {
         T.put("videos_indexed",         new String[]{" videos indexados",         " videos indexed",             " видео проиндексировано",    " Videos indiziert",          " 个视频已索引"});
         T.put("error_prefix",           new String[]{"Error: ",                  "Error: ",                     "Ошибка: ",                   "Fehler: ",                   "错误: "});
 
-        // ── PlayerActivity / SeriesPlayerActivity ─────────────────────────
+        
         T.put("no_next",                 new String[]{"No hay siguiente video",  "No next video",               "Следующего видео нет",       "Kein nächstes Video",        "没有下一个视频"});
         T.put("no_prev",                 new String[]{"No hay video anterior",   "No previous video",           "Предыдущего видео нет",      "Kein vorheriges Video",      "没有上一个视频"});
         T.put("open_error",              new String[]{"No se pudo abrir el video", "Could not open the video",  "Не удалось открыть видео",   "Video konnte nicht geöffnet werden", "无法打开视频"});
@@ -96,7 +113,7 @@ public class Lang {
         T.put("chapters_label",          new String[]{" capítulos",              " chapters",                   " главы",                     " Kapitel",                   " 章"});
         T.put("items_label",             new String[]{" elementos",              " items",                      " элементов",                 " Elemente",                  " 项"});
 
-        // ── Metadata de video ─────────────────────────────────────────────
+        
         T.put("unit_b",                  new String[]{"B",                       "B",                           "Б",                          "B",                          "B"});
         T.put("unit_kb",                 new String[]{"KB",                      "KB",                          "КБ",                         "KB",                         "KB"});
         T.put("unit_mb",                 new String[]{"MB",                      "MB",                          "МБ",                         "MB",                         "MB"});
@@ -116,18 +133,18 @@ public class Lang {
         T.put("time_days_ago_plural",    new String[]{"s",                       "",                            "",                            "en",                         ""});
         T.put("date_locale",             new String[]{"es",                      "en",                          "ru",                          "de",                         "zh"});
 
-        // ── SearchActivity ────────────────────────────────────────────────
+        
         T.put("search_hint",             new String[]{"Buscar videos...",        "Search videos...",            "Поиск видео...",             "Videos suchen...",           "搜索视频..."});
         T.put("search_empty",            new String[]{"Escribe algo para buscar", "Type something to search",  "Введите запрос для поиска",  "Etwas eingeben zum Suchen",  "输入内容以搜索"});
         T.put("search_no_results",       new String[]{"Sin resultados",          "No results",                  "Нет результатов",            "Keine Ergebnisse",           "无结果"});
 
-        // ── HistoryFragment ───────────────────────────────────────────────
+        
         T.put("history_empty",           new String[]{"Sin historial\n\nLos videos que reproduzcas aparecerán acá", "No history\n\nVideos you play will appear here", "История пуста\n\nВоспроизведённые видео появятся здесь", "Kein Verlauf\n\nAbgespielte Videos erscheinen hier", "暂无记录\n\n播放过的视频将显示在这里"});
 
-        // ── SeriesFragment ────────────────────────────────────────────────
+        
         T.put("series_empty",            new String[]{"Sin series\n\nPone carpetas de episodios dentro de Series/", "No series\n\nPut episode folders inside Series/", "Нет сериалов\n\nПоместите папки с эпизодами в Series/", "Keine Serien\n\nEpisoden-Ordner in Series/ ablegen", "暂无剧集\n\n请将剧集文件夹放入 Series/"});
 
-        // ── ShortsFragment ────────────────────────────────────────────────
+        
         T.put("shorts_label",            new String[]{"Shorts",                  "Shorts",                      "Shorts",                     "Shorts",                     "短视频"});
         T.put("shorts_empty",            new String[]{"Sin shorts.\nPone videos verticales en la carpeta Shorts/", "No shorts.\nPut vertical videos in the Shorts/ folder", "Нет коротких видео.\nПоместите вертикальные видео в папку Shorts/", "Keine Shorts.\nVertikale Videos in den Ordner Shorts/ legen", "暂无短视频。\n请将竖屏视频放入 Shorts/ 文件夹"});
     }
@@ -145,7 +162,7 @@ public class Lang {
             case "ru": return 2;
             case "de": return 3;
             case "zh": return 4;
-            default:   return 0; // "es"
+            default:   return 0; 
         }
     }
 }

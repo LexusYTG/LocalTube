@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.app.*;
@@ -7,16 +24,6 @@ import android.graphics.drawable.*;
 import android.os.*;
 import java.util.*;
 
-/**
- * Construye las RemoteAction que Android muestra en el menú del PiP
- * (los botones que aparecen cuando el usuario toca la ventanita).
- *
- * Los iconos se generan con PlayerUi.renderIconBitmap() para que tengan
- * la misma estética que los controles in-app (nada de recursos del sistema).
- *
- * Solo se debe llamar en API 26+ (Android O); los call-sites ya están
- * guardados por Build.VERSION_CODES.O.
- */
 public class PipActions {
 
     public static final String ACTION_TOGGLE  = "com.lexus2026.localtube.PIP_TOGGLE";
@@ -47,15 +54,7 @@ public class PipActions {
         return new RemoteAction(icon, title, desc, pi);
     }
 
-    /**
-     * Acciones para PlayerActivity (video suelto):
-     *   [◀◀ Video anterior]  [▶/⏸ Play/Pausa]  [▶▶ Video siguiente]
-     *
-     * Es el mismo set de 3 botones que usa YouTube en PiP. Android solo
-     * muestra 3 RemoteAction en la vista compacta, así que estos son los
-     * que priorizamos. Si no hay anterior/siguiente, el botón se muestra
-     * igual (al pulsarlo la Activity avisa con un Toast "No hay ...").
-     */
+    
     public static ArrayList<RemoteAction> videoActions(Context ctx, boolean playing) {
         ArrayList<RemoteAction> out = new ArrayList<RemoteAction>();
 
@@ -77,7 +76,7 @@ public class PipActions {
         return out;
     }
 
-    /** Acciones para SeriesPlayerActivity: retroceder, play/pausa, siguiente episodio. */
+    
     public static ArrayList<RemoteAction> seriesActions(Context ctx, boolean playing) {
         ArrayList<RemoteAction> out = new ArrayList<RemoteAction>();
 

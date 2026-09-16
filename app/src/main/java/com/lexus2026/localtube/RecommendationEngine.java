@@ -1,3 +1,21 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+
 package com.lexus2026.localtube;
 
 import java.util.*;
@@ -11,12 +29,9 @@ public class RecommendationEngine {
     private static final float W_LONG_FORM        = 0.3f;
     private static final float W_RANDOM           = 1.2f;
 
-    // Umbral: una palabra debe aparecer en al menos este porcentaje del total
-    // de videos para ser considerada un cluster significativo.
-    private static final float CLUSTER_MIN_RATIO  = 0.03f; // 3%
-    // Y en al menos este número absoluto de videos.
+    private static final float CLUSTER_MIN_RATIO  = 0.03f;
     private static final int   CLUSTER_MIN_COUNT  = 3;
-    // Palabras vacías que no aportan significado
+
     private static final Set<String> STOPWORDS = new HashSet<String>();
     static {
         String[] sw = {
@@ -34,11 +49,6 @@ public class RecommendationEngine {
 
     private final Random rng = new Random();
 
-    /**
-     * Construye un mapa palabra→frecuencia contando en cuántos videos distintos
-     * aparece cada token. Devuelve solo las palabras que superan el umbral.
-     * Esas palabras son los "clusters emergentes".
-     */
     public Map<String, Integer> buildClusterIndex(List<VideoItem> allVideos) {
         Map<String, Integer> freq = new HashMap<String, Integer>();
         for (VideoItem v : allVideos) {
@@ -57,14 +67,9 @@ public class RecommendationEngine {
         return clusters;
     }
 
-    /**
-     * Asigna a cada video su cluster principal: la palabra del cluster index
-     * que aparece en su título y tiene mayor frecuencia (más videos la comparten).
-     * Si no hay ninguna, queda como "general".
-     */
     public void assignClusters(List<VideoItem> allVideos, Map<String, Integer> clusterIndex) {
         for (VideoItem v : allVideos) {
-            if (v.genre != null && !v.genre.isEmpty()) continue; // ya asignado
+            if (v.genre != null && !v.genre.isEmpty()) continue;
             Set<String> tokens = tokenize(v);
             String bestCluster = "general";
             int bestFreq = 0;
@@ -79,9 +84,6 @@ public class RecommendationEngine {
         }
     }
 
-    /**
-     * Punto de entrada principal. Construye clusters, los asigna, y puntúa.
-     */
     public List<VideoItem> recommend(List<VideoItem> allVideos, int maxResults) {
         if (allVideos == null || allVideos.isEmpty()) return new ArrayList<VideoItem>();
 
@@ -144,15 +146,11 @@ public class RecommendationEngine {
         return out.size() > 8 ? out.subList(0, 8) : out;
     }
 
-    // ------------------------------------------------------------------ //
-
     private Set<String> tokenize(VideoItem v) {
         String text = ((v.title    != null ? v.title    : "") + " " +
 			(v.fileName != null ? v.fileName : "") + " " +
 			(v.category != null ? v.category : "")).toLowerCase();
-        // Reemplazar separadores típicos de nombres de archivo por espacio
         text = text.replaceAll("[_\\-\\.\\[\\]\\(\\)]+", " ");
-        // Quitar caracteres no alfanuméricos excepto letras con tilde
         text = text.replaceAll("[^a-záéíóúüña-z0-9 ]", " ");
         String[] parts = text.trim().split("\\s+");
         Set<String> tokens = new HashSet<String>();
@@ -213,4 +211,3 @@ public class RecommendationEngine {
         return result;
     }
 }
-

@@ -1,15 +1,22 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
-/**
- * Makes sure only one playback session (PlayerActivity, SeriesPlayerActivity,
- * or the embedded ShortsPlayerView) is actually producing audio/video at a
- * time. Whoever claims playback stops whichever session held it before.
- *
- * NOTE: this class was referenced (PlaybackGuard.Session / .claim / .release)
- * by the files handed over for this session but was not itself included in
- * the upload, so it was reconstructed here from those call sites. Please
- * double check it matches whatever version you had before.
- */
 public class PlaybackGuard {
 
     public interface Session {
@@ -18,11 +25,7 @@ public class PlaybackGuard {
 
     private static Session activeSession;
 
-    /**
-     * Called when a session starts/resumes playback. "owner" is accepted for
-     * call-site symmetry (every caller currently passes "this, this") but is
-     * not otherwise used - the session reference is what matters.
-     */
+    
     public static void claim(Object owner, Session session) {
         if (activeSession != null && activeSession != session) {
             activeSession.stopPlayback();

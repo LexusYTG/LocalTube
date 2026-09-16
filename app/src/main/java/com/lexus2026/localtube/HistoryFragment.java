@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.content.*;
@@ -24,10 +41,10 @@ public class HistoryFragment {
     private static final int COLOR_BADGE   = 0xE6000000;
 
     private final MainActivity activity;
-    private final VideoIndex index;
+    private final GlobalIndex index;
     private final ListView listView;
 
-    public HistoryFragment(MainActivity activity, VideoIndex index) {
+    public HistoryFragment(MainActivity activity, GlobalIndex index) {
         this.activity = activity;
         this.index    = index;
 
@@ -55,7 +72,7 @@ public class HistoryFragment {
 
         if (history.isEmpty()) {
             listView.setAdapter(null);
-            // Mostrar mensaje vacío via footer
+            
             TextView empty = new TextView(activity);
             empty.setText(Lang.get("history_empty"));
             empty.setTextColor(COLOR_TEXT2);
@@ -71,7 +88,7 @@ public class HistoryFragment {
         listView.setAdapter(adapter);
     }
 
-    /** Devuelve los videos reproducidos alguna vez, ordenados por lastWatched desc */
+    
     private List<VideoItem> getHistory() {
         List<VideoItem> all = index.getAll();
         List<VideoItem> watched = new ArrayList<VideoItem>();
@@ -104,9 +121,9 @@ public class HistoryFragment {
         return (int) (v * activity.getResources().getDisplayMetrics().density + 0.5f);
     }
 
-    // -------------------------------------------------------------------------
-    // Adapter
-    // -------------------------------------------------------------------------
+    
+    
+    
 
     private class HistoryAdapter extends BaseAdapter {
 
@@ -126,14 +143,14 @@ public class HistoryFragment {
         public View getView(final int position, View convertView, ViewGroup parent) {
             final VideoItem video = items.get(position);
 
-            // --- Fila horizontal: thumbnail izquierda + info derecha ---
+            
             LinearLayout row = new LinearLayout(ctx);
             row.setOrientation(LinearLayout.HORIZONTAL);
             row.setGravity(Gravity.CENTER_VERTICAL);
             row.setPadding(dp(12), dp(8), dp(12), dp(8));
             row.setBackgroundColor(COLOR_BG);
 
-            // Thumbnail
+            
             int thumbW = dp(120);
             int thumbH = dp(68);
             FrameLayout thumbBox = new FrameLayout(ctx);
@@ -151,7 +168,7 @@ public class HistoryFragment {
                 new ThumbLoader(thumb).execute(video.thumbPath);
             }
 
-            // Barra de progreso de reproducción sobre el thumbnail
+            
             if (video.duration > 0 && video.lastPosition > 0) {
                 int progressPct = (int) Math.min(100,
 												 (video.lastPosition * 100L / video.duration));
@@ -170,7 +187,7 @@ public class HistoryFragment {
                 thumbBox.addView(progressFill, pgFillLp);
             }
 
-            // Badge de duración
+            
             TextView duration = new TextView(ctx);
             duration.setText(video.getDurationFormatted());
             duration.setTextColor(COLOR_TEXT);
@@ -189,7 +206,7 @@ public class HistoryFragment {
 
             row.addView(thumbBox, new LinearLayout.LayoutParams(thumbW, thumbH));
 
-            // Info
+            
             LinearLayout info = new LinearLayout(ctx);
             info.setOrientation(LinearLayout.VERTICAL);
             info.setGravity(Gravity.CENTER_VERTICAL);
@@ -208,7 +225,7 @@ public class HistoryFragment {
             title.setLineSpacing(dp(2), 1f);
             info.addView(title);
 
-            // Tiempo relativo
+            
             TextView timeAgo = new TextView(ctx);
             timeAgo.setText(formatRelativeTime(video.lastWatched));
             timeAgo.setTextColor(COLOR_TEXT2);
@@ -218,7 +235,7 @@ public class HistoryFragment {
             taLp.topMargin = dp(4);
             info.addView(timeAgo, taLp);
 
-            // Si tiene posición guardada: mostrar "Retomar en X:XX"
+            
             if (video.lastPosition > 0 && video.duration > 0
 				&& video.lastPosition < video.duration - 5000) {
                 TextView resume = new TextView(ctx);
@@ -252,9 +269,9 @@ public class HistoryFragment {
         return String.format("%d:%02d", m, sec);
     }
 
-    // -------------------------------------------------------------------------
-    // Thumb loader
-    // -------------------------------------------------------------------------
+    
+    
+    
 
     static class ThumbLoader extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> ref;
@@ -276,5 +293,3 @@ public class HistoryFragment {
         }
     }
 }
-
-

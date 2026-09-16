@@ -1,36 +1,43 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.util.*;
 import java.io.*;
 import org.json.*;
 
-/**
- * Representa los metadatos de un canal.
- * Vive en rootPath/Catalogo/<NombreCanal>/.Cdata.json
- *
- * Campos:
- *   folderId    — nombre exacto de la carpeta del canal (clave de enlace en GlobalIndex)
- *   displayName — nombre visible que el usuario puede cambiar desde ajustes
- *   photoPath   — ruta a la imagen del canal (guardada como canal_photo.jpg en /.miniaturas/)
- *   videoAmount — cantidad de videos declarados en .CIndex.json (usado para escaneo incremental)
- */
 public class ChannelData {
 
     private static final String TAG       = "ChannelData";
     static final String         FILE_NAME = ".Cdata.json";
 
-    public String folderId;       // nombre de carpeta, inmutable
-    public String displayName;    // nombre editable por el usuario
-    public String photoPath;      // ruta a canal_photo.jpg, puede ser null
-    public int    videoAmount;    // conteo declarado de videos
+    public String folderId;       
+    public String displayName;    
+    public String photoPath;      
+    public int    videoAmount;    
 
     public ChannelData() {}
 
-    // -------------------------------------------------------------------------
-    // Persistencia
-    // -------------------------------------------------------------------------
+    
+    
+    
 
-    /** Lee .Cdata.json desde la carpeta del canal. Devuelve null si no existe o falla. */
+    
     public static ChannelData load(File channelDir) {
         File f = new File(channelDir, FILE_NAME);
         if (!f.exists()) return null;
@@ -50,7 +57,7 @@ public class ChannelData {
         }
     }
 
-    /** Escribe (o crea) .Cdata.json en la carpeta del canal. */
+    
     public void save(File channelDir) {
         try {
             JSONObject o = new JSONObject();
@@ -67,10 +74,7 @@ public class ChannelData {
         }
     }
 
-    /**
-     * Crea un .Cdata.json inicial para una carpeta recién detectada.
-     * displayName = nombre de carpeta, sin foto aún.
-     */
+    
     public static ChannelData createDefault(File channelDir) {
         ChannelData cd = new ChannelData();
         cd.folderId    = channelDir.getName();
@@ -81,9 +85,9 @@ public class ChannelData {
         return cd;
     }
 
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
+    
+    
+    
 
     private static byte[] readFile(File f) throws IOException {
         FileInputStream fis = new FileInputStream(f);

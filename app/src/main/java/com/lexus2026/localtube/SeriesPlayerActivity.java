@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.app.*;
@@ -20,13 +37,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 
     public static final String EXTRA_VIDEO = "extra_video";
 
-    /**
-     * Claves para onSaveInstanceState. La Activity se recrea al entrar o salir
-     * de PiP porque el sistema dispara cambios de configuración (screenSize,
-     * screenLayout, etc.) y no los declaramos en el manifest. Sin esto, onCreate
-     * vuelve a leer EXTRA_VIDEO, que contiene el video ORIGINAL, y el cambio de
-     * capítulo hecho en PiP se pierde al maximizar (y viceversa).
-     */
+    
     private static final String STATE_VIDEO_ID = "state_video_id";
     private static final String STATE_POSITION = "state_position";
 
@@ -52,28 +63,23 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
     private boolean isPrepared = false;
     private boolean prepareRequested = false;
 
-    /** Surface activa del GLSurfaceView. */
+    
     private Surface currentSurface;
 
-    /** Posición viva en memoria. Fuente primaria en onPrepared. */
+    
     private int lastKnownPositionMs = 0;
 
-    /** Último tick del progressRunnable para detectar resets implícitos. */
+    
     private long lastTickPosition = 0;
     private long lastTickTime = 0;
 
-    /** true mientras un seek disparado por onPrepared no se completó. */
+    
     private boolean seekInProgress = false;
 
     private boolean controlsVisible = false;
     private long playStartTime = 0;
 
-    /**
-     * Senal estatica que indica que esta Activity debe autodestruirse en el
-     * proximo onResume/onPictureInPictureModeChanged (usado cuando finish()
-     * es ignorado por el sistema porque estamos en PiP). Mismo mecanismo que
-     * PlayerActivity.sRequestedClose.
-     */
+    
     static boolean sRequestedClose = false;
 
     private final Handler handler = new Handler();
@@ -81,11 +87,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         @Override public void run() { hideControls(); }
     };
 
-    /**
-     * Tick de 500 ms. Actualiza UI + persiste restorer. Detecta incoherencias
-     * (posición que retrocede) para no pisar lastKnownPositionMs si el
-     * MediaPlayer fue reseteado de forma implícita.
-     */
+    
     private final Runnable progressRunnable = new Runnable() {
         @Override public void run() {
             if (mediaPlayer != null && isPrepared) {
@@ -116,7 +118,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
                     if (rf != null) RestorerStore.writePosition(rf, lastKnownPositionMs);
                 }
 
-                // Actualizar barra de progreso en la notificación de segundo plano.
+                
                 updateNotificationProgress();
             }
             handler.postDelayed(this, 500);
@@ -126,7 +128,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
     private static final int HIDE_DELAY = 3000;
     private GestureDetector gestureDetector;
 
-    // ── PiP receiver ─────────────────────────────────────────────────────────
+    
     private boolean pipReceiverRegistered = false;
 
     private final BroadcastReceiver pipReceiver = new BroadcastReceiver() {
@@ -147,7 +149,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
                 goNextEpisode();
                 refreshPipParams();
             } else if (MediaPlaybackService.ACTION_NOTIF_PREV.equals(action)) {
-                // Series no tiene episodio anterior expuesto, ignorar
+                
             }
         }
     };
@@ -159,8 +161,8 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                              WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Index primero: lo necesitamos para resolver el video por ID al
-        // restaurar tras una recreación por cambio de configuración (PiP).
+        
+        
         index = new GlobalIndex(this);
         String root2 = AppPrefs.get(this).getRootPath();
         if (root2 != null) { index.setRootPath(root2); index.loadFromDisk(); }
@@ -179,9 +181,9 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 
         sRequestedClose = false;
 
-        // Garantiza una sola fuente de reproduccion: si queda un reproductor
-        // de video/serie residente (minimizado en la barra o en PiP), se
-        // cierra por completo antes de arrancar este.
+        
+        
+        
         PlayerBridge.closeCurrent();
 
         buildUi();
@@ -196,7 +198,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Refrescar la posición viva antes de persistirla.
+        
         if (mediaPlayer != null && isPrepared) {
             try {
                 int pos = mediaPlayer.getCurrentPosition();
@@ -211,13 +213,13 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 
     private void registerPipReceiver() {
         IntentFilter filter = new IntentFilter();
-        // Acciones PiP (solo API 26+)
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             filter.addAction(PipActions.ACTION_TOGGLE);
             filter.addAction(PipActions.ACTION_REWIND);
             filter.addAction(PipActions.ACTION_NEXT);
         }
-        // Acciones de la notificación de segundo plano (todas las versiones)
+        
         filter.addAction(MediaPlaybackService.ACTION_NOTIF_TOGGLE);
         filter.addAction(MediaPlaybackService.ACTION_NOTIF_PREV);
         filter.addAction(MediaPlaybackService.ACTION_NOTIF_NEXT);
@@ -235,7 +237,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         pipReceiverRegistered = false;
     }
 
-    // ── UI ───────────────────────────────────────────────────────────────────
+    
 
     private void buildUi() {
         root = new FrameLayout(this);
@@ -249,7 +251,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 					currentSurface = surface;
 					if (mediaPlayer == null) return;
 
-					// Guardar posición antes de cualquier manipulación.
+					
 					if (isPrepared) {
 						try {
 							int pos = mediaPlayer.getCurrentPosition();
@@ -257,9 +259,9 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 						} catch (Exception ignored) {}
 					}
 
-					// Algunos devices resetean implícitamente el MediaPlayer al
-					// recibir una Surface nueva estando preparado. getDuration()
-					// devuelve 0 (o lanza IllegalStateException en Idle).
+					
+					
+					
 					boolean mediaPlayerWasReset = false;
 					if (isPrepared) {
 						try {
@@ -273,7 +275,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 					try { mediaPlayer.setSurface(surface); } catch (Exception ignored) {}
 
 					if (mediaPlayerWasReset && currentVideo != null) {
-						// Re-preparar conservando lastKnownPositionMs.
+						
 						try {
 							mediaPlayer.reset();
 							mediaPlayer.setDataSource(currentVideo.path);
@@ -331,7 +333,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         root.addView(controlsOverlay, new FrameLayout.LayoutParams(
 						 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        // ── Top ──
+        
         LinearLayout topRow = new LinearLayout(this);
         topRow.setOrientation(LinearLayout.HORIZONTAL);
         topRow.setGravity(Gravity.CENTER_VERTICAL);
@@ -383,7 +385,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         topLp.gravity = Gravity.TOP;
         controlsOverlay.addView(topRow, topLp);
 
-        // ── Center ──
+        
         LinearLayout centerRow = new LinearLayout(this);
         centerRow.setOrientation(LinearLayout.HORIZONTAL);
         centerRow.setGravity(Gravity.CENTER);
@@ -431,7 +433,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         centerLp.gravity = Gravity.CENTER;
         controlsOverlay.addView(centerRow, centerLp);
 
-        // ── Bottom ──
+        
         LinearLayout bottomBox = new LinearLayout(this);
         bottomBox.setOrientation(LinearLayout.VERTICAL);
         bottomBox.setPadding(dp(16), dp(8), dp(16), dp(22));
@@ -515,7 +517,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 				}
 			});
 
-        // ── End card ──
+        
         endCard = new FrameLayout(this);
         endCard.setBackgroundColor(Color.BLACK);
         endCard.setVisibility(View.GONE);
@@ -561,7 +563,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         return (int) (v * getResources().getDisplayMetrics().density + 0.5f);
     }
 
-    // ── Ciclo de vida ────────────────────────────────────────────────────────
+    
 
     @Override
     protected void onPause() {
@@ -591,7 +593,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         }
     }
 
-    /** Construye el Intent de inicio del servicio con metadatos del episodio actual. */
+    
     private Intent buildNotifStartIntent() {
         int pos = (mediaPlayer != null && isPrepared) ? mediaPlayer.getCurrentPosition() : 0;
         int dur = (mediaPlayer != null && isPrepared) ? mediaPlayer.getDuration()        : 0;
@@ -626,10 +628,10 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
     protected void onResume() {
         super.onResume();
 
-        // Si otro reproductor pidio que este se cierre (p.ej. se abrio un
-        // video nuevo mientras este estaba en PiP), autodestruirse aqui -
-        // funciona incluso cuando finish() externo fue ignorado por el
-        // sistema por estar en PiP.
+        
+        
+        
+        
         if (sRequestedClose) {
             sRequestedClose = false;
             if (mediaPlayer != null && isPrepared) {
@@ -639,9 +641,9 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
             return;
         }
 
-        // Si veníamos de PiP, no tocar el servicio aquí.
-        // onPictureInPictureModeChanged (que llega justo después) decide si
-        // el usuario expandió (→ parar servicio) o cerró la X (→ arrancar servicio).
+        
+        
+        
         if (wasInPip) return;
 
         if (mediaPlayer != null && isPrepared && !mediaPlayer.isPlaying()
@@ -704,7 +706,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         controlsVisible = false;
         handler.removeCallbacks(hideRunnable);
 
-        // Persistir posición en cada transición.
+        
         if (mediaPlayer != null && isPrepared && currentVideo != null) {
             try {
                 int pos = mediaPlayer.getCurrentPosition();
@@ -717,11 +719,11 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         }
 
         if (isInPiP) {
-            // Entrando al PiP: mantener runnables activos.
+            
             handler.removeCallbacks(progressRunnable);
             handler.post(progressRunnable);
         } else if (sRequestedClose) {
-            // Otro reproductor pidio cerrar este mientras estaba en PiP.
+            
             sRequestedClose = false;
             wasInPip = false;
             if (mediaPlayer != null && isPrepared) {
@@ -731,14 +733,14 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
             stopService(new Intent(this, MediaPlaybackService.class));
             finish();
         } else {
-            // Saliendo del PiP. Dos sub-casos:
-            //   a) El usuario expandió (volvió a fullscreen): isFinishing()==false
-            //   b) El usuario cerró la X de la ventanita: isFinishing()==true,
-            //      el audio sigue → arrancar servicio de notificación.
+            
+            
+            
+            
             wasInPip = false;
 
             if (isFinishing()) {
-                // Caso b: PiP cerrado con X.
+                
                 if (mediaPlayer != null && isPrepared && mediaPlayer.isPlaying()
 					&& AppPrefs.get(this).isBgAudioEnabled()) {
                     isServiceRunning = true;
@@ -748,7 +750,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
                     updatePlayButton();
                 }
             } else {
-                // Caso a: usuario expandió — volvemos a foreground.
+                
                 isServiceRunning = false;
                 stopService(new Intent(this, MediaPlaybackService.class));
                 showControls();
@@ -775,13 +777,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         requestClose();
     }
 
-    /**
-     * Cierra esta Activity aunque este en PiP. finish() es ignorado por el
-     * sistema en algunos dispositivos mientras la ventana PiP esta activa,
-     * asi que ademas dejamos la senal sRequestedClose para que se
-     * autodestruya en el siguiente onResume/onPictureInPictureModeChanged
-     * si finish() no surtio efecto de inmediato.
-     */
+    
     private void requestClose() {
         if (isFinishing()) return;
         sRequestedClose = true;
@@ -798,19 +794,15 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         startActivity(i);
     }
 
-    // ── Carga de episodio ────────────────────────────────────────────────────
+    
 
-    /**
-     * Prepara el MediaPlayer para currentVideo. NO resetea lastKnownPositionMs:
-     * el llamador decide si es un capítulo nuevo (posición 0) o una restauración
-     * tras recreación (posición guardada).
-     */
+    
     private void loadCurrent() {
         endCard.setVisibility(View.GONE);
         isPrepared = false;
         prepareRequested = false;
 
-        // Solo resets de estado transitorio.
+        
         lastTickPosition = 0;
         lastTickTime = 0;
         seekInProgress = false;
@@ -863,7 +855,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
             } catch (Exception ignored) {}
         }
         currentVideo = next;
-        // Capítulo nuevo: arrancamos desde donde corresponda (restorer propio o 0).
+        
         lastKnownPositionMs = 0;
         loadCurrent();
     }
@@ -882,7 +874,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
 						? currentVideo.seriesName : ""));
     }
 
-    // ── Gestos ───────────────────────────────────────────────────────────────
+    
 
     private void initGestures() {
         gestureDetector = new GestureDetector(this,
@@ -922,7 +914,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         controlsOverlay.setOnTouchListener(touchRouter);
     }
 
-    // ── MediaPlayer callbacks ────────────────────────────────────────────────
+    
 
     @Override
     public void onPrepared(MediaPlayer mp) {
@@ -935,8 +927,8 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         int videoH = mp.getVideoHeight();
         if (videoW > 0 && videoH > 0) glView.setVideoSize(videoW, videoH);
 
-        // Prioridad: lastKnownPositionMs (viva o restaurada por recreación)
-        // > restorer file > lastPosition del índice.
+        
+        
         long resumePos = 0;
         if (lastKnownPositionMs > 0) {
             resumePos = lastKnownPositionMs;
@@ -986,7 +978,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         return true;
     }
 
-    // ── Acciones ─────────────────────────────────────────────────────────────
+    
 
     private void togglePlay() {
         if (!isPrepared) return;
@@ -1040,7 +1032,7 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         scheduleHide();
     }
 
-    // ── PiP ──────────────────────────────────────────────────────────────────
+    
 
     private void enterPip() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
@@ -1130,5 +1122,3 @@ MediaPlayer.OnErrorListener, PlaybackGuard.Session {
         }
     }
 }
-
-

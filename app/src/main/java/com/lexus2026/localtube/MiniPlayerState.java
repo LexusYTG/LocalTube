@@ -1,14 +1,22 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
-/**
- * Holds the "minimized" player info so MainActivity can render a small
- * mini-player bar after the user taps the minimize button inside
- * PlayerActivity or SeriesPlayerActivity. The real MediaPlayer keeps living
- * inside that (now backgrounded) Activity - this class only stores what's
- * needed to draw the bar and to know which screen to bring back to front.
- *
- * NOTE: reconstructed for this session - see PlaybackGuard.java for context.
- */
 public class MiniPlayerState {
 
     public static final int NONE   = 0;

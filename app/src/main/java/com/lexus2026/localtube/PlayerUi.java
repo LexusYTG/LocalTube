@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import android.content.*;
@@ -5,22 +22,9 @@ import android.graphics.*;
 import android.util.*;
 import android.view.*;
 
-/**
- * Toolkit de controles de reproductor dibujados a mano.
- * Reemplaza por completo a ImageButton/SeekBar del sistema, que en Android
- * tienen un look prehistórico.
- *
- * Componentes:
- *   - IconButton: botón circular con icono vectorial dibujado con Path.
- *   - SeekBar:    barra de progreso con thumb que crece al arrastrar.
- *   - VolumeSlider: slider compacto con icono de altavoz integrado.
- *
- * También expone renderIconBitmap(), usado por PipActions para generar los
- * RemoteAction de Picture-in-Picture con la misma estética.
- */
 public class PlayerUi {
 
-    // ── Códigos de icono ─────────────────────────────────────────────────────
+    
     public static final int ICON_PLAY      = 0;
     public static final int ICON_PAUSE     = 1;
     public static final int ICON_REWIND    = 2;
@@ -32,18 +36,18 @@ public class PlayerUi {
     public static final int ICON_CLOSE     = 8;
     public static final int ICON_VOLUME    = 9;
 
-    // ── Paleta ───────────────────────────────────────────────────────────────
+    
     public static final int COLOR_ACCENT = 0xFFFF004D;
     public static final int COLOR_TEXT   = 0xFFFFFFFF;
 
-    // ── dp helper ────────────────────────────────────────────────────────────
+    
     public static int dp(Context c, float v) {
         return (int) (v * c.getResources().getDisplayMetrics().density + 0.5f);
     }
 
-    // =========================================================================
-    // IconButton — botón circular con icono vectorial
-    // =========================================================================
+    
+    
+    
     public static class IconButton extends View {
 
         private int icon;
@@ -151,9 +155,9 @@ public class PlayerUi {
         }
     }
 
-    // =========================================================================
-    // Dibujo de iconos
-    // =========================================================================
+    
+    
+    
     public static void drawIcon(Canvas c, int icon, float cx, float cy, float s, Paint p) {
         p.setStyle(Paint.Style.FILL);
         p.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
@@ -311,11 +315,7 @@ public class PlayerUi {
         c.drawText("10", cx, cy + s * 0.14f, p);
     }
 
-    /**
-     * Renderiza un icono a Bitmap. Se usa para construir los RemoteAction del PiP.
-     * El Bitmap resultante es cuadrado, de fondo transparente, con el icono
-     * dibujado en el color indicado. El trazo ocupa ~85% del lado.
-     */
+    
     public static Bitmap renderIconBitmap(Context ctx, int icon, int sizeDp, int color) {
         float density = ctx.getResources().getDisplayMetrics().density;
         int sizePx = Math.max(1, (int) (sizeDp * density + 0.5f));
@@ -330,9 +330,9 @@ public class PlayerUi {
         return bmp;
     }
 
-    // =========================================================================
-    // SeekBar custom
-    // =========================================================================
+    
+    
+    
     public static class SeekBar extends View {
 
         public interface OnSeekListener {
@@ -481,9 +481,9 @@ public class PlayerUi {
         }
     }
 
-    // =========================================================================
-    // VolumeSlider
-    // =========================================================================
+    
+    
+    
     public static class VolumeSlider extends View {
 
         public interface OnVolumeChangeListener {

@@ -1,3 +1,20 @@
+/*
+ * This file is part of LocalTube.
+ *
+ * LocalTube is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LocalTube is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LocalTube. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.lexus2026.localtube;
 
 import java.io.*;
@@ -29,19 +46,18 @@ public class VideoItem implements Serializable {
     public String seriesName;
     public int episode;
 
-    /** true si el número de capítulo fue fijado a mano por el usuario
-     *  (el escaneo automático ya no lo vuelve a calcular desde el nombre). */
+    
     public boolean episodeManual;
 
-    /** Etiquetas de organización manual asignadas por el usuario. */
+    
     public List<String> tags = new ArrayList<String>();
 
     public String thumbPath;
 
-    /** Nombre del archivo dentro de rootPath/.restorer/ que guarda la posición. */
+    
     public String restorerFile;
 
-    /** folderId del canal al que pertenece este video (nombre de carpeta en /Catalogo/). */
+    
     public String channelId;
 
     public int playCount;
@@ -84,7 +100,7 @@ public class VideoItem implements Serializable {
         return type == TYPE_SHORT;
     }
 
-    /** Tags como texto separado por comas, para mostrar/editar en un diálogo. */
+    
     public String getTagsString() {
         if (tags == null || tags.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
@@ -95,7 +111,7 @@ public class VideoItem implements Serializable {
         return sb.toString();
     }
 
-    /** Parsea un texto separado por comas y arma la lista de tags (sin vacíos ni duplicados). */
+    
     public static List<String> parseTagsString(String s) {
         List<String> out = new ArrayList<String>();
         if (s == null) return out;
@@ -112,5 +128,3 @@ public class VideoItem implements Serializable {
         return title + " [" + getDurationFormatted() + "]";
     }
 }
-
-
