@@ -94,5 +94,3 @@ GNU General Public License v3.0.
 Copyright © 2026 LexusYTG — leonpackpro@gmail.com
 
 ---
-
-AnaCronix
